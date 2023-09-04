@@ -1,12 +1,12 @@
+from pathlib import Path
 from typing import Any, List
 
 import pandas as pd
 
 
 class SiteReportGenerator:
-    def __init__(self, input_filepath: str, output_filepath: str):
-        self.input_filepath = input_filepath
-        self.output_filepath = output_filepath
+    def __init__(self, input_filepath: str):
+        self.input_filepath = Path(input_filepath)
         self.df = pd.read_excel(
             self.input_filepath,
             header=None,  # do not consider first row as header
@@ -51,8 +51,10 @@ class SiteReportGenerator:
 
         return output_data
 
-    def _save(self, data, headers):
-        with pd.ExcelWriter(self.output_filepath, engine="openpyxl") as writer:
+    def _save(self, data, headers, n_days_period):
+        output_filepath = str(self.input_filepath.parent) \
+                          + f"/output_{n_days_period}_days_report.xlsx"
+        with pd.ExcelWriter(output_filepath, engine="openpyxl") as writer:
             df_out = pd.DataFrame(data, columns=headers)
             df_out.to_excel(writer, index=False)
 
@@ -64,4 +66,4 @@ class SiteReportGenerator:
         n_days_period = (end_date - start_date).days + 1
         headers = self._get_headers()
         output_data = self._extract_data_from_input_sheet(n_days_period)
-        self._save(output_data, headers)
+        self._save(output_data, headers, n_days_period)
