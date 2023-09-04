@@ -4,13 +4,11 @@ import pandas as pd
 
 
 class SiteReportGenerator:
-    def __init__(self, file_path: str, input_sheet_name: str, output_sheet_name: str):
-        self.file_path = file_path
-        self.input_sheet_name = input_sheet_name
-        self.output_sheet_name = output_sheet_name
+    def __init__(self, input_filepath: str, output_filepath: str):
+        self.input_filepath = input_filepath
+        self.output_filepath = output_filepath
         self.df = pd.read_excel(
-            self.file_path,
-            sheet_name=input_sheet_name,
+            self.input_filepath,
             header=None,  # do not consider first row as header
         )
 
@@ -54,10 +52,9 @@ class SiteReportGenerator:
         return output_data
 
     def _save(self, data, headers):
-        with pd.ExcelWriter(self.file_path, engine="openpyxl", mode="a",
-                            if_sheet_exists="replace") as writer:
+        with pd.ExcelWriter(self.output_filepath, engine="openpyxl") as writer:
             df_out = pd.DataFrame(data, columns=headers)
-            df_out.to_excel(writer, sheet_name=self.output_sheet_name, index=False)
+            df_out.to_excel(writer, index=False)
 
     def run(self):
         """Extract, format and save report data in another sheet of the same file."""
