@@ -10,6 +10,12 @@ Please check the expected input and output formats as shown on file
 - Python 3.11.2+
 
 ## Installation
+Clone the project and enter its folder:
+```commandline
+git clone git@github.com:pereiragm/site-report-generator.git
+cd site-report-generator
+```
+
 Create a virtual environment and activate it:
 ```commandline
 python3 -m venv venv
